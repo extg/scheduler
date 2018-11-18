@@ -16,9 +16,9 @@ const mapTime = pipe(
   map(map(Number))
 );
 
-// const createEvent = async (event) =>
-//   await new Promise((resolve, reject) =>
-//     ics.createEvent(event, (err, res) => err ? reject(err) : resolve(res)))
+const createEvent = async (event) =>
+  await new Promise((resolve, reject) =>
+    ics.createEvent(event, (err, res) => err ? reject(err) : resolve(res)));
 
 (async () => {
   const browser = await puppeteer.launch();
@@ -34,11 +34,32 @@ const mapTime = pipe(
   const locationSelector = '.room'
   const titleSelector = '.lesson'
 
-  // console.log($(rootSelector, daySelector))
+  // let toArray = a => [].slice.call(a);
 
+  // .map(a => toArray(a.querySelectorAll('tr'))).flat()
+
+  const rawData = await page.$$eval(rootSelector, nodes =>
+    nodes
+      .map(day => day.querySelectorAll('tr'))
+      .map(lessons => [].slice.call(lessons))
+      .flat()
+      .filter(el => el.innerText)
+      .map(el => ({
+        title: el.querySelector('.lesson').innerText.trim(),
+        day: el.querySelector('.day').innerText.trim(),
+        timeWeek: el.querySelector('.time').innerText.trim(),
+        location: el.querySelector('.room').innerText.trim(),
+      }))
+  );
+
+  log(rawData)
+
+  // console.log($(rootSelector, daySelector))
+  process.exit(0)
   // const day = await page.$eval($(rootSelector, daySelector), el => el.innerText.trim().toLowerCase());
 
   const $0 = (...s) => page.$eval($(rootSelector, ...s), el => el.innerText.trim());
+  // const $$0 = (...s) => page.$$eval($(rootSelector, ...s), el => el.innerText.trim());
 
   const now = () => new Date();
 
@@ -51,22 +72,22 @@ const mapTime = pipe(
     status: 'CONFIRMED',
     productId: 'scheduler/ics',
     // 'RRULE:FREQ=WEEKLY;INTERVAL=2;UNTIL=20181218T205959Z;BYDAY=TU'
-  }).then(({time, t = mapTime(time), ...event}) => ({
+  }).then(({time, t = mapTime(time), day, ...event}) => ({
     ...event,
-    start: [now().getFullYear(), now().getMonth(), now().getDay(), t[0][0], t[0][1]],
-    end: [now().getFullYear(), now().getMonth(), now().getDay(), t[1][0], t[1][1]],
+    start: [now().getFullYear(), now().getMonth() + 1, now().getDate(), t[0][0], t[0][1]],
+    end: [now().getFullYear(), now().getMonth() + 1, now().getDate(), t[1][0], t[1][1]],
   })).catch(console.error)
 
   // console.log(JSON.stringify(mapTime(event.time)))
   console.log(JSON.stringify(event, null, 2))
 
-  // const data = await createEvent(event);
+  const data = await createEvent(event);
 
   // console.log(data);
 
-  // fs.writeFileSync('./calendars/result.ics', )
+  fs.writeFileSync('./calendars/result.ics', data);
 
   await browser.close();
 })();
 
-
+function log(...args) {console.log(...args.map(arg => JSON.stringify(arg, null, 2))); return args[args.length - 1];}
