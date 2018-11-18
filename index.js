@@ -8,8 +8,6 @@ const {pipe, split, map} = require('ramda');
 
 const url = 'http://www.ifmo.ru/ru/schedule/0/M3308/raspisanie_zanyatiy_M3308.htm';
 
-const $ = (...selectors) => selectors.join(' ');
-
 const mapTime = pipe(
   split('-'),
   map(split(':')),
@@ -24,33 +22,27 @@ const createEvent = async (event) =>
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  // await page.goto(url);
   await page.goto(url, {waitUntil: 'networkidle0'});
-  // await page.screenshot({path: 'example.png'});
 
-  const rootSelector = '.rasp_tabl_day .rasp_tabl';
-  const daySelector = '.day'
-  const timeSelector = '.time'
-  const locationSelector = '.room'
-  const titleSelector = '.lesson'
-
-  // let toArray = a => [].slice.call(a);
-
-  // .map(a => toArray(a.querySelectorAll('tr'))).flat()
-
-  const rawData = await page.$$eval(rootSelector, nodes =>
+  const rawData = await page.$$eval('.rasp_tabl_day .rasp_tabl', nodes =>
     nodes
       .map(day => day.querySelectorAll('tr'))
       .map(lessons => [].slice.call(lessons))
       .flat()
       .filter(el => el.innerText)
       .map(el => ({
-        title: el.querySelector('.lesson').innerText.trim(),
+        title: el.querySelector('.lesson').innerText.trim().split('\n')[0],
         day: el.querySelector('.day').innerText.trim(),
-        timeWeek: el.querySelector('.time').innerText.trim(),
-        location: el.querySelector('.room').innerText.trim(),
+        time: el.querySelector('.time').innerText.trim().split('\n')[0],
+        week: el.querySelector('.time').innerText.trim().split('\n')[1],
+        location: el.querySelector('.room').innerText.trim().split('\n\t').reverse().join(', '),
       }))
+      .reduce((acc, val) => acc.concat({
+        ...val,
+        day: val.day || acc[acc.length - 1].day,
+      }), [])
   );
+
 
   log(rawData)
 
