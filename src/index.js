@@ -13,6 +13,7 @@ const url = 'http://www.ifmo.ru/ru/schedule/0/M3308/raspisanie_zanyatiy_M3308.ht
 
   await page.goto(url, {waitUntil: 'networkidle0'});
 
+  // Получение сырых данных максимально приближенных к нужному формату
   const rawData = await page.$$eval('.rasp_tabl_day .rasp_tabl', nodes =>
     nodes
       .map(day => day.querySelectorAll('tr'))
@@ -44,6 +45,7 @@ const url = 'http://www.ifmo.ru/ru/schedule/0/M3308/raspisanie_zanyatiy_M3308.ht
   // log(rawData);
   // process.exit(0);
 
+  // Приведение данных к формату
   const events = rawData
     .map(({time, ...event}) => ({...event, t: mapTime(time)}))
     .map(({t, day, isWeekOdd, ...event}) => ({
@@ -68,5 +70,3 @@ const url = 'http://www.ifmo.ru/ru/schedule/0/M3308/raspisanie_zanyatiy_M3308.ht
 
   await browser.close();
 })();
-
-function log(...args) {console.log(...args.map(arg => JSON.stringify(arg, null, 2))); return args[args.length - 1];}
