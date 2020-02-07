@@ -1,9 +1,11 @@
+Install dependecies
 ```sh
-npm install
+yarn
 ```
 
+Generate calendar
 ```sh
-node src/index.js
+yarn build && yarn start
 ```
 
 
