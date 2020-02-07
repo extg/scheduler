@@ -1,8 +1,13 @@
 {
   "name": "scheduler",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/index.js",
   "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node build/src/index.js"
+  },
   "dependencies": {
     "bluebird": "^3.5.3",
     "ics": "^2.10.0",
@@ -12,7 +17,9 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@types/node": "^13.7.0",
     "jest": "^23.6.0",
-    "timekeeper": "^2.1.2"
+    "timekeeper": "^2.1.2",
+    "typescript": "^3.7.5"
   }
 }
