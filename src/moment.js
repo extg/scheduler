@@ -1,7 +1,7 @@
 'use strict';
 
-const moment = require('moment');
+import moment, { locale } from 'moment';
 
-moment.locale('ru');
+locale('ru');
 
-module.exports = moment;
+export default moment;
