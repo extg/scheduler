@@ -76,6 +76,22 @@ const vFormat = (val: string | number) => {
   return `${date}T${time}`;
 };
 
+const END_OF_AUTUMN_SEMESTER = moment(new Date("12.31." + moment().year()));
+const START_OF_AUTUMN_SEMESTER = moment(new Date("9.1." + moment().year()));
+
+const START_OF_SPRING_SEMESTER = moment(new Date("1.1." + moment().year()));
+const END_OF_SPRING_SEMESTER = moment(new Date("5.31." + moment().year()));
+
+const closestSemesterEnd = (function getClosestSemesterEnd() {
+  const now = moment()
+
+  if (now.isBetween(START_OF_AUTUMN_SEMESTER, END_OF_AUTUMN_SEMESTER)) {
+    return `${now.year()}1231`
+  }
+
+  return `${now.year()}0531`
+})()
+
 export const vEvent = <T extends Event>({
   uid = nanoid(),
   timestamp = Date.now(),
@@ -102,7 +118,7 @@ export const vEvent = <T extends Event>({
     // `CREATED:${vFormat(created)}`,
     `DTSTART;TZID=Europe/Moscow:${vFormat(start as string)}`,
     `DTEND;TZID=Europe/Moscow:${vFormat(end as string)}`,
-    `RRULE:FREQ=WEEKLY;INTERVAL=${interval};UNTIL=20181231T235959Z;BYDAY=${byDay};WKST=MO`, // MO TU WE TH FR SA SU
+    `RRULE:FREQ=WEEKLY;INTERVAL=${interval};UNTIL=${closestSemesterEnd}T235959Z;BYDAY=${byDay};WKST=MO`, // MO TU WE TH FR SA SU
     'END:VEVENT',
   ].join('\n');
 

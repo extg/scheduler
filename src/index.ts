@@ -52,14 +52,27 @@ const url = `http://www.ifmo.ru/ru/schedule/0/${group}/raspisanie_zanyatiy_${gro
         isWeekOdd: ({
           'нечетная неделя': true,
           'четная неделя': false,
-        }[week]) ?? false,
+        }[week]),
       }))
       .map(
-        (el, index, arr) =>
-          ({
+        // Ya etot typescript mamu v kino vodil, ego typechecker ne smog normalno tipi vivesti dlya .reduce(...,[])
+        (el, index, arr) => {
+          let day = el.day;
+
+          if (!day) {
+            for (let i = index; index > 0; i--) {
+              if (arr[i].day) {
+                day = arr[i].day;
+                break;
+              }
+            }
+          }
+
+          return ({
             ...el,
-            day: el?.day ?? arr[index - 1].day,
+            day,
           })
+        }
       )
   );
 
