@@ -107,7 +107,7 @@ const url = `http://www.ifmo.ru/ru/schedule/0/${group}/raspisanie_zanyatiy_${gro
   const now = new Date();
 
   fs.writeFileSync(
-    `${outDir + outDir.endsWith('/') ? '' : '/'}result_${now.toLocaleDateString()}_${group}.ics`,
+    `${outDir + (outDir.endsWith('/') ? '' : '/')}result_${now.toLocaleDateString()}_${group}.ics`,
     vCalendar(...events)
   );
 
