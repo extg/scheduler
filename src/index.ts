@@ -6,9 +6,9 @@ import { mapTime, getWeekDay, vCalendar, getByDay, Event } from './utils';
 import { groups } from './constants';
 
 const argv = process.argv.slice(2);
-const { group } = mri(argv, {
-  alias: { group: ['g'] },
-  default: { group: 'M3408' },
+const { group, outDir } = mri(argv, {
+  alias: { group: ['g'], outDir: ['out', 'dir'] },
+  default: { group: 'M3408', outDir: './calendars' },
 });
 
 if (!groups.includes(group as string)) {
@@ -19,7 +19,7 @@ if (!groups.includes(group as string)) {
 const url = `http://www.ifmo.ru/ru/schedule/0/${group}/raspisanie_zanyatiy_${group}.htm`;
 
 (async () => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   await page.goto(url, { waitUntil: 'networkidle0' });
@@ -94,7 +94,7 @@ const url = `http://www.ifmo.ru/ru/schedule/0/${group}/raspisanie_zanyatiy_${gro
   const now = new Date();
 
   fs.writeFileSync(
-    `./calendars/result_${now.toLocaleDateString()}_${group}.ics`,
+    `${outDir + outDir.endsWith('/') ? '' : '/'}result_${now.toLocaleDateString()}_${group}.ics`,
     vCalendar(...events)
   );
 
