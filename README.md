@@ -1,10 +1,19 @@
-```sh
-npm install
-```
+Install dependecies
 
 ```sh
-node src/index.js
+yarn
 ```
 
+Generate calendar
 
-Результат упадет в `./calendars/result5.ics`
+```sh
+yarn build && yarn start
+```
+
+CLI arguments
+
+| --out, --dir, --outDir | Output directory |
+| ---------------------- | ---------------- |
+| --g, --group           | Group identifier |
+
+Результат упадет в `${outDir}/result_${Дата}_${Группа}.ics`
