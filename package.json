@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "start": "node build/src/index.js"
+    "start": "node build/index.js"
   },
   "dependencies": {
     "bluebird": "^3.5.3",
