@@ -6,8 +6,9 @@ import { mapTime, getWeekDay, vCalendar, getByDay, Event } from './utils';
 import { groups } from './constants';
 
 const argv = process.argv.slice(2);
-const { group, outDir } = mri(argv, {
-  alias: { group: ['g'], outDir: ['out', 'dir'] },
+const { group, outDir, noLectures } = mri(argv, {
+  alias: { group: ['g'], outDir: ['out', 'dir'], noLectures: ['no-lectures', 'time-save'] },
+  boolean: ['noLectures'],
   default: { group: 'M3408', outDir: './calendars' },
 });
 
@@ -47,6 +48,7 @@ const url = `http://www.ifmo.ru/ru/schedule/0/${group}/raspisanie_zanyatiy_${gro
             .join(', '),
         };
       })
+      .filter(el => !noLectures || !el.summary.toLowerCase().includes('(лек)'))
       .map(({ week, ...el }) => ({
         ...el,
         isWeekOdd: ({
