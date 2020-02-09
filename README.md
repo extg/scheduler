@@ -1,10 +1,18 @@
 Install dependecies
 
 ```sh
+npm i
+```
+
+```sh
 yarn
 ```
 
 Generate calendar
+
+```sh
+npm run build && npm run start
+```
 
 ```sh
 yarn build && yarn start
