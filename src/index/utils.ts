@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import ics from 'ics';
 import { pipe, split, map, ValueOfRecord } from 'ramda';
 
-import moment from './moment';
+import moment from './utils/moment';
 
 export const mapTime = pipe(split('-'), map(split(':')), map(map(Number)));
 

@@ -2,8 +2,8 @@ import mri from 'mri';
 import fs from 'fs';
 import puppeteer from 'puppeteer';
 
-import { mapTime, getWeekDay, vCalendar, getByDay, Event } from './utils';
-import { groups } from './constants';
+import { mapTime, getWeekDay, vCalendar, getByDay, Event } from './index/utils';
+import { groups } from './index/constants';
 
 const argv = process.argv.slice(2);
 const { group, outDir, noLectures } = mri(argv, {
