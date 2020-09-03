@@ -13,7 +13,7 @@
     "ics": "^2.10.0",
     "mri": "^1.1.4",
     "nanoid": "^2.1.11",
-    "puppeteer": "^1.10.0",
+    "puppeteer": "^1.13.0",
     "puppeteer-core": "^1.10.0",
     "ramda": "^0.26.0",
     "uuid": "^3.3.2"
